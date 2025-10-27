@@ -1,8 +1,8 @@
-FROM nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04
+FROM nvcr.io/nvidia/cuda:12.8.0-runtime-ubuntu24.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PYENV_ROOT "/pyenv"
-ENV PATH "$PYENV_ROOT/bin:$PATH"
+ENV PATH "$PYENV_ROOT/bin:/usr/local/cuda/bin:$PATH"
 
 RUN apt-get update -y \
     && apt-get install -y \
@@ -26,7 +26,11 @@ RUN apt-get update -y \
         git \
         libxml2-dev \
         libxmlsec1-dev \
+        pkg-config \
+        ca-certificates \
+        cuda-command-line-tools-12-8 \
+        cuda-libraries-dev-12-8 \
     && rm -rf /var/lib/apt/lists/*
 RUN curl -fsSL https://pyenv.run | bash
 RUN eval "$(pyenv init -)"
-RUN pyenv install 3.10 3.11 3.12
+RUN pyenv install 3.12 3.13

@@ -26,6 +26,10 @@ build_wheel() {
     PYT3D=$3
     PYT_COMPACT=${PYT//./}
 
+    if ! pyenv versions --bare | grep -qx "$PY"; then
+        pyenv install "$PY"
+    fi
+
     pyenv global $PY
     VENV_NAME=venv_"$PY"_"$PYT"_"$PYT3D"
     /pyenv/shims/python"$PY" -m venv /root/"$VENV_NAME"

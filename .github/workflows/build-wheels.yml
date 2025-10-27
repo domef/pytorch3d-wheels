@@ -1,0 +1,66 @@
+# Trigger on tags and manual dispatch to build and publish PyTorch3D wheels.
+name: Build Wheels
+
+on:
+  workflow_dispatch:
+    inputs:
+      python_versions:
+        description: "Space-delimited Python versions to build (e.g. '3.12 3.13')"
+        required: false
+        default: "3.12 3.13"
+      pytorch_cuda_versions:
+        description: "Comma-separated torch:cuda pairs (e.g. '2.9.0:128')"
+        required: false
+        default: "2.9.0:128"
+      pytorch3d_versions:
+        description: "Space-delimited PyTorch3D versions (e.g. '0.7.8')"
+        required: false
+        default: "0.7.8"
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    env:
+      PYTHON_VERSIONS: ${{ github.event_name == 'workflow_dispatch' && inputs.python_versions || '3.12 3.13' }}
+      PYTORCH_CUDA_VERSIONS: ${{ github.event_name == 'workflow_dispatch' && inputs.pytorch_cuda_versions || '2.9.0:128' }}
+      PYTORCH3D_VERSIONS: ${{ github.event_name == 'workflow_dispatch' && inputs.pytorch3d_versions || '0.7.8' }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build builder image
+        run: docker build -t pytorch3d_builder:cu128 .
+
+      - name: Build wheels
+        run: |
+          mkdir -p wheels
+          ./compile_outside.sh "${PYTHON_VERSIONS}" "${PYTORCH_CUDA_VERSIONS}" "${PYTORCH3D_VERSIONS}" "$(pwd)/wheels"
+
+      - name: List wheels
+        run: ls -lh wheels
+
+      - name: Upload wheels artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pytorch3d-wheels
+          path: wheels/*.whl
+
+      - name: Publish release assets
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: wheels/*.whl
