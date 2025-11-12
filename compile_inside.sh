@@ -3,12 +3,12 @@
 PYTHON_VERSIONS=($1)
 PYTORCH_VERSIONS=($2)
 PYTORCH3D_VERSIONS=($3)
-OUTPUT_FOLDER=$4
+CAPABILITIES=($4)
+OUTPUT_FOLDER=$5
 
 CUDA_VERSION=$(nvcc --version | grep "release" | awk '{print $5}' | sed 's/,//')
 CUDA_VERSION_COMPACT=${CUDA_VERSION//./}
 
-CAPABILITIES=(50 60 61 62  70 72 75 80 86 89 90)
 CUDA_CAPABILITIES=""
 for i in "${CAPABILITIES[@]}"; do
     CUDA_CAPABILITIES+="-gencode=arch=compute_$i,code=sm_$i "
