@@ -43,7 +43,7 @@ The input parameters are:
 - python versions
 - pytorch versions, for each one you can speficy different cuda versions
 - pytorch3d versions
-- cuda capabilities
+- cuda capabilities (see here if you're not sure [https://en.wikipedia.org/wiki/CUDA#GPUs_supported](https://en.wikipedia.org/wiki/CUDA#GPUs_supported))
 - output folder where the wheels will be saved
 
 This will build a wheel for each combination of python, pytorch/cuda and pytorch3d version.
