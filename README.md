@@ -12,13 +12,13 @@ docker build \
     --build-arg PYTHON_VERSIONS="3.10 3.11 3.12 3.13" \
     -t pytorch3d_builder:cu118 .
 
-# Build docker image for cuda 12.1
+# Build docker image for cuda 12.4
 docker build \
   --build-arg BASE_IMAGE="12.4.1-cudnn-devel-ubuntu22.04" \
   --build-arg PYTHON_VERSIONS="3.10 3.11 3.12 3.13" \
   -t pytorch3d_builder:cu124 .
 
-# Build docker image for cuda 12.4
+# Build docker image for cuda 12.8
 docker build \
   --build-arg BASE_IMAGE="12.8.1-cudnn-devel-ubuntu24.04" \
   --build-arg PYTHON_VERSIONS="3.10 3.11 3.12 3.13" \
