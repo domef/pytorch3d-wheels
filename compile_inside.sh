@@ -13,7 +13,7 @@ CUDA_CAPABILITIES=""
 for i in "${CAPABILITIES[@]}"; do
     CUDA_CAPABILITIES+="-gencode=arch=compute_$i,code=sm_$i "
 done
-CUDA_CAPABILITIES+="-gencode=arch=compute_50,code=compute_50"
+CUDA_CAPABILITIES+="-gencode=arch=compute_${CAPABILITIES[0]},code=compute_${CAPABILITIES[0]}"
 
 export CUDA_HOME=/usr/local/cuda-"$CUDA_VERSION"
 export NVCC_FLAGS="$CUDA_CAPABILITIES"
