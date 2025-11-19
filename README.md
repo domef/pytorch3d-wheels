@@ -33,6 +33,10 @@ docker build \
 
 The script `compile_outside.sh` orchestrates the build in the various docker images while the script `compile_inside.sh` is launched inside the docker images and it actually builds the wheels.
 
+> [!WARNING]  
+> As of 19.11.2025, if you need to compile for CUDA 13, you need to add the flag `-static-global-template-stub=false`
+> to the `NVCC_FLAGS` (compile_inside.sh -> line 19), see [this issue](https://github.com/facebookresearch/pytorch3d/issues/2011).
+
 Building example:
 
 ```
